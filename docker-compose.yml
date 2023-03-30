@@ -11,3 +11,14 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+
+  search-service:
+    build:
+      context: ./
+      dockerfile: ./search-service/search-service.dockerfile
+    restart: always
+    ports:
+      - "8081:80"
+    deploy:
+      mode: replicated
+      replicas: 1

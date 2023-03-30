@@ -1,6 +1,11 @@
 package main
 
-import "net/http"
+import (
+	"encoding/json"
+	"io/ioutil"
+	"log"
+	"net/http"
+)
 
 type SearchQuery struct {
 	Kind       string `json:"kind"`
@@ -8,7 +13,7 @@ type SearchQuery struct {
 	Items      Items  `json:"items"`
 }
 
-type Items struct {
+type Items []struct {
 	Kind       string     `json:"kind"`
 	Id         string     `json:"id"`
 	Etag       string     `json:"etag"`
@@ -17,6 +22,48 @@ type Items struct {
 }
 
 type VolumeInfo struct {
+	Title               string              `json:"title"`
+	Subtitle            string              `json:"subtitle"`
+	Authors             []string            `json:"authors"`
+	Publisher           string              `json:"publisher"`
+	PublishedDate       string              `json:"publishedDate"`
+	Description         string              `json:"description"`
+	IndustryIdentifiers IndustryIdentifiers `json:"industryIdentifiers"`
+	ReadingModes        ReadingModes        `json:"readingModes"`
+	PageCount           int64               `json:"pageCount"`
+	PrintType           string              `json:"printType"`
+	Categories          []string            `json:"categories"`
+	AverageRating       int64               `json:"averageRating"`
+	RatingsCount        int64               `json:"ratingsCount"`
+	MaturityRating      string              `json:"maturityRating"`
+	AllowAnonLogging    bool                `json:"allowAnonLogging"`
+	ContentVersion      string              `json:"contentVersion"`
+	PanelizationSummary PanelizationSummary `json:"panelizationSummary"`
+	ImageLinks          ImageLinks          `json:"imageLinks"`
+	Language            string              `json:"language"`
+	PreviewLink         string              `json:"previewLink"`
+	infoLink            string              `json:"infoLink"`
+	CanonicalVolumeLink string              `json:"canonicalVolumeLink"`
+}
+
+type PanelizationSummary struct {
+	ContainsEpubBubbles  bool `json:"containsEpubBubbles"`
+	ContainsImageBubbles bool `json:"containsImageBubbles"`
+}
+
+type ImageLinks struct {
+	SmallThumbnail string `json:"smallThumbnail"`
+	Thumbnail      string `json:"thumbnail"`
+}
+
+type ReadingModes struct {
+	Text  bool `json:"text"`
+	Image bool `json:"image"`
+}
+
+type IndustryIdentifiers []struct {
+	Type       string `json:"type"`
+	Identifier string `json:"identifier"`
 }
 
 type SaleInfo struct {
@@ -77,5 +124,22 @@ type SearchInfo struct {
 }
 
 func (app *Config) Search(w http.ResponseWriter, r *http.Request) {
+	resp, err := http.Get("https://www.googleapis.com/books/v1/volumes?q=dataintensive")
+	if err != nil {
+		log.Println(err)
+	}
 
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println(err)
+	}
+
+	sq := SearchQuery{}
+
+	err = json.Unmarshal(respBody, &sq)
+	if err != nil {
+		log.Println(err)
+	}
+
+	_ = app.jsonWrite(w, http.StatusOK, sq)
 }
