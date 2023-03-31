@@ -137,7 +137,8 @@ type SearchTest struct {
 }
 
 func (app *Config) Search(w http.ResponseWriter, r *http.Request) {
-	resp, err := http.Get("https://www.googleapis.com/books/v1/volumes?q=dataintensive")
+	params := r.URL.Query().Get("q")
+	resp, err := http.Get("https://www.googleapis.com/books/v1/volumes?q=" + params)
 	if err != nil {
 		log.Println(err)
 	}
