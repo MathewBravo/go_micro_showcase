@@ -22,5 +22,6 @@ func (app *Config) routes() http.Handler {
 	mux.Use(middleware.Heartbeat("/ping"))
 
 	mux.Post("/", app.Gateway)
+	mux.Get("/searchtest", app.BookSearch)
 	return mux
 }

@@ -1,17 +1,35 @@
+<script lang="ts">
+import {onMount} from "svelte"
+let result: String | null;
+async function gatewayTest (){
+        const resp = await fetch('http://localhost:8080',
+        {method: "POST"}
+        )
+        const json = await resp.json()
+        result = JSON.stringify(json, null, 2)
+    }
+async function searchTest (){
+        const resp = await fetch('http://localhost:8080/searchtest'
+        )
+        const json = await resp.json()
+        result = JSON.stringify(json, null, 2)
+    }
+
+</script>
 <div>
     <h1>Personal Library Microservices Application</h1>
     <div class="action-container">
     <div class="button-container">
-    <button class="menu-button" role="button">Gateway Test</button>
+    <button class="menu-button" role="button" on:click={gatewayTest}>Gateway Test</button>
     <br>
     <br>
-    <button class="menu-button" role="button">Search Test</button>
+    <button class="menu-button" role="button" on:click={searchTest}>Search Test</button>
     <br>
     <br>
     <button class="menu-button" role="button">Library Test</button>
     </div>
     <div class="test-display">
-    <p>Display</p>
+    <pre>{result}</pre>
     </div>
     </div>
 

@@ -19,6 +19,9 @@ type Items []struct {
 	Etag       string     `json:"etag"`
 	SelfLink   string     `json:"selfLink"`
 	VolumeInfo VolumeInfo `json:"volumeInfo"`
+	SaleInfo   SaleInfo   `json:"saleInfo"`
+	AccessInfo AccessInfo `json:"accessInfo"`
+	SearchInfo SearchInfo `json:"searchInfo"`
 }
 
 type VolumeInfo struct {
@@ -123,6 +126,16 @@ type SearchInfo struct {
 	TextSnippet string `json:"textSnippet"`
 }
 
+type SearchResponse struct {
+	Title       string `json:"title"`
+	Subtitle    string `json:"subtitle"`
+	Description string `json:"description"`
+}
+
+type SearchTest struct {
+	ItemCount int64 `json:"itemCount"`
+}
+
 func (app *Config) Search(w http.ResponseWriter, r *http.Request) {
 	resp, err := http.Get("https://www.googleapis.com/books/v1/volumes?q=dataintensive")
 	if err != nil {
@@ -142,4 +155,29 @@ func (app *Config) Search(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_ = app.jsonWrite(w, http.StatusOK, sq)
+}
+
+func (app *Config) SearchTest(w http.ResponseWriter, r *http.Request) {
+	resp, err := http.Get("https://www.googleapis.com/books/v1/volumes?q=dataintensive")
+	if err != nil {
+		log.Println(err)
+	}
+
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println(err)
+	}
+
+	sq := SearchQuery{}
+
+	err = json.Unmarshal(respBody, &sq)
+	if err != nil {
+		log.Println(err)
+	}
+
+	st := SearchTest{
+		ItemCount: sq.TotalItems,
+	}
+
+	_ = app.jsonWrite(w, http.StatusOK, st)
 }
