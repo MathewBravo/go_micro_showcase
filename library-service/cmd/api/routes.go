@@ -23,6 +23,6 @@ func (app *Config) routes() http.Handler {
 
 	mux.Use(middleware.Heartbeat("/ping"))
 
-	mux.Get("/libary", app.Library)
+	mux.Get("/library", app.Library)
 	return mux
 }

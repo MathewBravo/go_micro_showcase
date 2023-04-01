@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"time"
+
+	"github.com/lib/pq"
 )
 
 const TIMEOUT = time.Second * 5
@@ -12,7 +14,6 @@ var db *sql.DB
 
 func New(dbPool *sql.DB) Models {
 	db = dbPool
-
 	return Models{
 		Book: Book{},
 	}
@@ -23,12 +24,13 @@ type Models struct {
 }
 
 type Book struct {
-	Title       string   `json:"title"`
-	Authors     []string `json:"authors"`
-	Description string   `json:"despcription"`
-	IsReading   bool     `json:"isReading"`
-	HasRead     bool     `json:"hasRead"`
-	Thumbnail   string   `json:"thumbnail"`
+	ID          int64          `json:"ID"`
+	Title       string         `json:"title"`
+	Authors     pq.StringArray `json:"authors"`
+	Description string         `json:"despcription"`
+	IsReading   bool           `json:"isReading"`
+	HasRead     bool           `json:"hasRead"`
+	Thumbnail   string         `json:"thumbnail"`
 }
 
 func (b *Book) GetAll() ([]*Book, error) {
@@ -48,6 +50,7 @@ func (b *Book) GetAll() ([]*Book, error) {
 	for rows.Next() {
 		var book Book
 		err := rows.Scan(
+			&book.ID,
 			&book.Title,
 			&book.Authors,
 			&book.Description,
