@@ -15,7 +15,7 @@ This project is a WIP, I add to it randomly to try new things.
 
 ## Structure
 
-![Structure](./images/Structure.png)
+![Structure](./Structure.png)
 
 ## Broker Service
 
