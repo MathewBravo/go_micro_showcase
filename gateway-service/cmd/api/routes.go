@@ -23,5 +23,6 @@ func (app *Config) routes() http.Handler {
 
 	mux.Post("/", app.Gateway)
 	mux.Get("/searchtest", app.BookSearch)
+	mux.Get("/library", app.AllLibrary)
 	return mux
 }
