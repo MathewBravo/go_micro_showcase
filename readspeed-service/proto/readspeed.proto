@@ -1,0 +1,26 @@
+syntax="proto3";
+
+option go_package = "./proto";
+
+package read_speed;
+
+service ReadSpeedService{
+    rpc ReadSpeedTest(NoParam) returns (ReadSpeedResponse);
+
+    rpc CalculateReadSpeed(PagesAndTime) returns (ReadSpeedCalculation);
+}
+
+message NoParam{};
+
+message ReadSpeedResponse{
+    string message = 1;
+}
+
+message PagesAndTime{
+    int64 pages = 1;
+    float time = 2;
+}
+
+message ReadSpeedCalculation{
+        float ppm = 1;
+}
