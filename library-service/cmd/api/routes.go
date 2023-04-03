@@ -24,5 +24,7 @@ func (app *Config) routes() http.Handler {
 	mux.Use(middleware.Heartbeat("/ping"))
 
 	mux.Get("/library", app.Library)
+	mux.Get("/seachlibrary", app.BookById)
+	mux.Post("/addbook", app.AddBook)
 	return mux
 }

@@ -66,6 +66,27 @@ func (b *Book) GetAll() ([]*Book, error) {
 	}
 
 	return books, nil
+}
+
+func (b *Book) GetBookByID(id string) (Book, error) {
+	ctx, timedout := context.WithTimeout(context.Background(), TIMEOUT)
+	defer timedout()
+
+	var book Book
+
+	query := `select id, title, authors, description, isreading, hasread, thumbnail from books where id=$1`
+	err := db.QueryRowContext(ctx, query, id).Scan(&book.Title,
+		&book.Authors,
+		&book.Description,
+		&book.IsReading,
+		&book.HasRead,
+		&book.Thumbnail,
+	)
+	if err != nil {
+		return Book{}, err
+	}
+
+	return book, nil
 
 }
 

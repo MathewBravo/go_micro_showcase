@@ -99,3 +99,7 @@ func (app *Config) AllLibrary(w http.ResponseWriter, r *http.Request) {
 
 	_ = app.jsonWrite(w, http.StatusOK, payload)
 }
+
+func (app *Config) AddBook(w http.ResponseWriter, r *http.Request) {
+
+}

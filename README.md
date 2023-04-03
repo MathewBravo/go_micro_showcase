@@ -28,3 +28,7 @@ Returns search results for the query param, utilizes a get request to the [Googl
 ## Library Management Service
 
 Handles all requests from user to manage personal library. Connects to a postgres database that handles storage of library books.
+
+## Listener Service (RabbitMQ)
+
+
